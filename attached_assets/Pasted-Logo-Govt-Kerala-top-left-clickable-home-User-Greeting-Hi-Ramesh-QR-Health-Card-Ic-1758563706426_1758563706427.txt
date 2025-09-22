@@ -1,0 +1,167 @@
+Logo (Govt Kerala) – top-left, clickable → home.
+
+User Greeting – “Hi, Ramesh 👋”
+
+QR Health Card Icon – opens modal with QR code + download button.
+
+Notification Bell – unread alerts badge + dropdown with animated list.
+
+Profile Dropdown – Settings, Language Switcher, Logout.
+
+Animation: Nav items fade-in + hover highlight.
+
+2️⃣ Hero Summary Section (Horizontal Cards)
+
+Quick glance metrics
+
+Card 1: Health Record Summary
+
+Name, Age, Gender, Blood Group, Allergies
+
+Last Checkup Date + Button: “View Details”
+
+Dummy Profile Image
+
+Card 2: Vaccination Status
+
+Progress bar (animated fill)
+
+Next vaccine date + “Book Appointment”
+
+Card 3: Alerts & Risk Level
+
+Red/Yellow indicator if urgent alert
+
+Example: “⚠ TB Screening Due”
+
+Animation: Cards slide-in from top, small bounce on hover.
+
+3️⃣ Symptom Self-Check Widget
+
+Short form: Fever, Cough, Fatigue (Yes/No)
+
+Submit → system calculates risk (dummy logic)
+
+Result Card: Green tick = safe / Red alert = visit health center
+
+Animation: Lottie animation for result tick/warning.
+
+CTA: “Locate Nearby Clinic” button.
+
+4️⃣ Vaccination Tracker Section
+
+Progress Bar: Completed vs Pending (animated)
+
+Upcoming vaccines in mini-cards with date
+
+Dummy Data:
+
+Completed: Tetanus, Hepatitis B
+
+Pending: Flu Shot (Due 28 Sept)
+
+Action: Book Appointment → opens modal with calendar.
+
+5️⃣ Health Records Section (Tab Layout)
+
+Tabs: Overview | Visits | Immunizations | Labs | Documents
+
+Overview Card: Last visit, doctor name, condition summary
+
+Visit History Table: Date, Diagnosis, Prescription (dummy PDF icon)
+
+Lab Reports: Attachments with download buttons
+
+Animation: Tab content fades + slide-in on switch
+
+6️⃣ Alerts & Notifications Feed
+
+Chronological list of alerts (latest on top)
+
+Examples: “Dengue outbreak near Perumbavoor”
+
+Color coding: Red = urgent, Yellow = info, Green = safe
+
+CTA: “Acknowledge” / “View Details”
+
+Slide-in animation from right on new alert
+
+7️⃣ Nearby Clinics Map Section
+
+Google Map / Leaflet integration
+
+Pins for local clinics (dummy locations)
+
+Click → mini card with clinic name, hours, “Get Directions”
+
+Mobile: collapsible, full-screen map toggle
+
+Animation: Pin bounce effect when map loads
+
+8️⃣ Health Tips Carousel
+
+Horizontal scroll / swipe on mobile
+
+Dummy images + tips:
+
+“Wash hands regularly”
+
+“Drink clean water”
+
+“Exercise daily”
+
+Auto-play carousel + swipe gestures
+
+Animation: Cards slide with fade
+
+9️⃣ Action Panel / Quick Actions
+
+Buttons:
+
+Book Checkup
+
+Download Health Card PDF
+
+Update Personal Info
+
+Buttons with hover glow & small scale-up animation
+
+Positioned top-right (desktop) / bottom-fixed (mobile)
+
+🔟 Footer Section
+
+“Powered by Govt of Kerala” + SDG-3 logo
+
+Links: About | Privacy Policy | Contact
+
+Minimal design, subtle shadow, fixed on large screens
+
+✨ Additional UI Details
+
+Color Palette: Kerala Green + soft Blues + neutral Greys, Red/Yellow for alerts
+
+Typography: Inter / Roboto, 16px mobile, 18px desktop
+
+Card Design: Rounded corners (2xl), subtle shadows
+
+Responsiveness: Mobile-first, cards stack vertically, bottom nav sticky, maps collapsible
+
+Animations: Framer Motion recommended
+
+Card slide-in, hover lift, progress bar fill, alert pulse, tab content fade
+
+Dummy Data: Fake profile, fake lab results, example vaccines, dummy clinic pins
+
+📱 Mobile vs Laptop Layout
+
+Mobile: Vertical stack, collapsible sections, bottom navigation bar for Dashboard, Records, QR, Alerts, Profile
+
+Laptop: Horizontal top summary cards, left sidebar optional for nav, full map + carousel visible side by side
+
+Problem → Solution Embedded
+Problem	Widget/Feature
+No Centralized Records	Health Record Summary Card + PDF download + QR scan
+Delayed Detection	Symptom Self-Check + Alerts Card
+Missed Vaccinations	Vaccination Tracker + Book Appointment
+Limited Access to Clinics	Nearby Clinics Map + Directions
+Language Barrier	Language Switcher dropdown
