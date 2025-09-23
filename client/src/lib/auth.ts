@@ -169,3 +169,41 @@ export async function updateProfile(updates: Partial<User>): Promise<void> {
     throw new Error(error.message);
   }
 }
+
+// Google OAuth authentication
+export async function signInWithGoogle(): Promise<AuthResponse> {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/dashboard`,
+    },
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  // Return a promise that resolves when the user comes back from Google
+  return new Promise((resolve, reject) => {
+    const checkSession = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData.session?.user) {
+        const user = sessionData.session.user;
+        resolve({
+          user: {
+            id: user.id,
+            email: user.email || '',
+            username: user.user_metadata?.username || user.email?.split('@')[0] || '',
+            role: user.user_metadata?.role || 'migrant',
+            isVerified: user.email_confirmed_at ? true : false,
+            createdAt: new Date(user.created_at),
+          },
+          token: sessionData.session.access_token || '',
+        });
+      } else {
+        setTimeout(checkSession, 1000); // Check again in 1 second
+      }
+    };
+    checkSession();
+  });
+}

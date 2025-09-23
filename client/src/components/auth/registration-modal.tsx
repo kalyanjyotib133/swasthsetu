@@ -64,7 +64,7 @@ export default function RegistrationModal({ open, onOpenChange, onSwitchToLogin 
   const [showSuccess, setShowSuccess] = useState(false);
   const [healthId, setHealthId] = useState("");
   const { toast } = useToast();
-  const { login: authLogin } = useAuth();
+  const { loginWithUser } = useAuth();
   const [, setLocation] = useLocation();
 
   const form = useForm<RegistrationForm>({
@@ -111,7 +111,7 @@ export default function RegistrationModal({ open, onOpenChange, onSwitchToLogin 
       const profile = await profileResponse.json();
       setHealthId(profile.healthId);
 
-      authLogin(authResponse.user);
+      loginWithUser(authResponse.user);
       setShowSuccess(true);
       
       toast({
@@ -144,6 +144,12 @@ export default function RegistrationModal({ open, onOpenChange, onSwitchToLogin 
     setLocation("/dashboard");
   };
 
+  const handleGoToLogin = () => {
+    setShowSuccess(false);
+    onOpenChange(false);
+    onSwitchToLogin?.();
+  };
+
   const resetModal = () => {
     setStep(1);
     setShowSuccess(false);
@@ -166,23 +172,37 @@ export default function RegistrationModal({ open, onOpenChange, onSwitchToLogin 
               <Check className="h-8 w-8 text-primary-foreground" />
             </motion.div>
             
-            <h2 className="text-2xl font-bold text-foreground mb-4">Welcome to SwasthSetu!</h2>
-            <p className="text-muted-foreground mb-6">
-              Your Health ID: <strong className="text-foreground">{healthId}</strong>
-            </p>
-            
-            {/* QR Code placeholder */}
-            <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center mx-auto mb-6">
-              <QrCode className="h-16 w-16 text-muted-foreground" />
-            </div>
-            
-            <Button
-              onClick={handleGoToDashboard}
-              className="w-full kerala-button-primary"
-              data-testid="button-go-dashboard"
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
             >
-              Go to My Dashboard
-            </Button>
+              <Check className="h-10 w-10 text-white" />
+            </motion.div>
+
+            <h2 className="text-2xl font-bold text-foreground mb-2">Registration Successful!</h2>
+            <p className="text-muted-foreground mb-4">
+              Welcome to SwasthSetu! Your account has been created successfully.
+            </p>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <p className="text-blue-800 font-medium mb-1">Your Health ID:</p>
+              <p className="text-blue-900 font-bold text-lg">{healthId}</p>
+              <p className="text-blue-600 text-sm mt-2">
+                Save this ID for future reference and health record access.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={handleGoToDashboard}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                data-testid="button-go-dashboard"
+              >
+                Continue to Dashboard
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -197,7 +217,7 @@ export default function RegistrationModal({ open, onOpenChange, onSwitchToLogin 
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="modal-registration">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-foreground">
-            Register as Migrant Worker
+            Join SwasthSetu
           </DialogTitle>
         </DialogHeader>
 
