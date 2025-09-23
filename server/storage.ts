@@ -1,6 +1,6 @@
-import { 
-  type User, 
-  type InsertUser, 
+import {
+  type User,
+  type InsertUser,
   type MigrantProfile,
   type InsertMigrantProfile,
   type HealthRecord,
@@ -13,7 +13,11 @@ import {
   type InsertSymptom,
   type Clinic
 } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config({ path: '.env' });
 
 export interface IStorage {
   // User management
@@ -54,250 +58,384 @@ export interface IStorage {
   getNearbyClinicsBylocation(latitude: string, longitude: string): Promise<Clinic[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private migrantProfiles: Map<string, MigrantProfile>;
-  private healthRecords: Map<string, HealthRecord>;
-  private vaccinations: Map<string, Vaccination>;
-  private alerts: Map<string, Alert>;
-  private symptoms: Map<string, Symptom>;
-  private clinics: Map<string, Clinic>;
+export class SupabaseStorage implements IStorage {
+  private supabase: SupabaseClient;
 
   constructor() {
-    this.users = new Map();
-    this.migrantProfiles = new Map();
-    this.healthRecords = new Map();
-    this.vaccinations = new Map();
-    this.alerts = new Map();
-    this.symptoms = new Map();
-    this.clinics = new Map();
-    
-    // Initialize with some sample clinics
-    this.initializeClinics();
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+    console.log('Storage constructor - SUPABASE_URL:', supabaseUrl ? 'Set' : 'Not set');
+    console.log('Storage constructor - SUPABASE_ANON_KEY:', supabaseKey ? 'Set' : 'Not set');
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Supabase URL and key are required');
+    }
+
+    this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  private initializeClinics() {
-    const sampleClinics: Clinic[] = [
-      {
-        id: randomUUID(),
-        name: "Primary Health Center",
-        address: "Kochi, Ernakulam",
-        latitude: "9.9312",
-        longitude: "76.2673",
-        phone: "0484-2345678",
-        hours: "8 AM - 8 PM",
-        services: ["General Medicine", "Vaccination", "Emergency"],
-        distance: "0.8 km"
-      },
-      {
-        id: randomUUID(),
-        name: "Community Health Center",
-        address: "Fort Kochi, Ernakulam",
-        latitude: "9.9658",
-        longitude: "76.2430",
-        phone: "0484-2234567",
-        hours: "24/7",
-        services: ["Emergency", "Surgery", "ICU"],
-        distance: "1.2 km"
-      },
-      {
-        id: randomUUID(),
-        name: "District Hospital",
-        address: "Ernakulam Medical College",
-        latitude: "9.9816",
-        longitude: "76.2999",
-        phone: "0484-2345123",
-        hours: "24/7",
-        services: ["All Specialties", "Emergency", "Surgery"],
-        distance: "2.1 km"
-      }
-    ];
-
-    sampleClinics.forEach(clinic => {
-      this.clinics.set(clinic.id, clinic);
-    });
-  }
-
+  // User management
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user by username:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.email === email);
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user by email:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
-      id, 
-      isVerified: false,
-      createdAt: new Date()
-    };
-    this.users.set(id, user);
-    return user;
+    const { data, error } = await this.supabase
+      .from('users')
+      .insert(insertUser)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
+
+    return data;
   }
 
   async updateUser(id: string, updates: Partial<User>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-    
-    const updatedUser = { ...user, ...updates };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    const { data, error } = await this.supabase
+      .from('users')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating user:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
+  // Migrant profile management
   async getMigrantProfile(userId: string): Promise<MigrantProfile | undefined> {
-    return Array.from(this.migrantProfiles.values()).find(profile => profile.userId === userId);
+    const { data, error } = await this.supabase
+      .from('migrant_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching migrant profile:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
   async getMigrantProfileById(id: string): Promise<MigrantProfile | undefined> {
-    return this.migrantProfiles.get(id);
+    const { data, error } = await this.supabase
+      .from('migrant_profiles')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching migrant profile by id:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
   async createMigrantProfile(profileData: InsertMigrantProfile & { userId: string }): Promise<MigrantProfile> {
-    const id = randomUUID();
-    const healthId = `MIG${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
-    const profile: MigrantProfile = { 
-      ...profileData, 
-      id, 
-      healthId,
-      createdAt: new Date()
-    };
-    this.migrantProfiles.set(id, profile);
-    return profile;
+    const { data, error } = await this.supabase
+      .from('migrant_profiles')
+      .insert(profileData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating migrant profile:', error);
+      throw error;
+    }
+
+    return data;
   }
 
   async updateMigrantProfile(id: string, updates: Partial<MigrantProfile>): Promise<MigrantProfile | undefined> {
-    const profile = this.migrantProfiles.get(id);
-    if (!profile) return undefined;
-    
-    const updatedProfile = { ...profile, ...updates };
-    this.migrantProfiles.set(id, updatedProfile);
-    return updatedProfile;
+    const { data, error } = await this.supabase
+      .from('migrant_profiles')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating migrant profile:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
+  // Health records
   async getHealthRecords(migrantId: string): Promise<HealthRecord[]> {
-    return Array.from(this.healthRecords.values())
-      .filter(record => record.migrantId === migrantId)
-      .sort((a, b) => b.date.getTime() - a.date.getTime());
+    const { data, error } = await this.supabase
+      .from('health_records')
+      .select('*')
+      .eq('migrant_id', migrantId)
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching health records:', error);
+      return [];
+    }
+
+    return data || [];
   }
 
   async getHealthRecordsByType(migrantId: string, type: string): Promise<HealthRecord[]> {
-    return Array.from(this.healthRecords.values())
-      .filter(record => record.migrantId === migrantId && record.recordType === type)
-      .sort((a, b) => b.date.getTime() - a.date.getTime());
+    const { data, error } = await this.supabase
+      .from('health_records')
+      .select('*')
+      .eq('migrant_id', migrantId)
+      .eq('record_type', type)
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching health records by type:', error);
+      return [];
+    }
+
+    return data || [];
   }
 
   async createHealthRecord(recordData: InsertHealthRecord): Promise<HealthRecord> {
-    const id = randomUUID();
-    const record: HealthRecord = { 
-      ...recordData, 
-      id,
-      createdAt: new Date()
-    };
-    this.healthRecords.set(id, record);
-    return record;
+    const { data, error } = await this.supabase
+      .from('health_records')
+      .insert(recordData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating health record:', error);
+      throw error;
+    }
+
+    return data;
   }
 
+  // Vaccinations
   async getVaccinations(migrantId: string): Promise<Vaccination[]> {
-    return Array.from(this.vaccinations.values())
-      .filter(vaccination => vaccination.migrantId === migrantId)
-      .sort((a, b) => {
-        const dateA = vaccination.scheduledDate || vaccination.completedDate || new Date(0);
-        const dateB = vaccination.scheduledDate || vaccination.completedDate || new Date(0);
-        return dateB.getTime() - dateA.getTime();
-      });
+    const { data, error } = await this.supabase
+      .from('vaccinations')
+      .select('*')
+      .eq('migrant_id', migrantId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching vaccinations:', error);
+      return [];
+    }
+
+    return data || [];
   }
 
   async createVaccination(vaccinationData: InsertVaccination): Promise<Vaccination> {
-    const id = randomUUID();
-    const vaccination: Vaccination = { 
-      ...vaccinationData, 
-      id,
-      createdAt: new Date()
-    };
-    this.vaccinations.set(id, vaccination);
-    return vaccination;
+    const { data, error } = await this.supabase
+      .from('vaccinations')
+      .insert(vaccinationData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating vaccination:', error);
+      throw error;
+    }
+
+    return data;
   }
 
   async updateVaccination(id: string, updates: Partial<Vaccination>): Promise<Vaccination | undefined> {
-    const vaccination = this.vaccinations.get(id);
-    if (!vaccination) return undefined;
-    
-    const updatedVaccination = { ...vaccination, ...updates };
-    this.vaccinations.set(id, updatedVaccination);
-    return updatedVaccination;
+    const { data, error } = await this.supabase
+      .from('vaccinations')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating vaccination:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
+  // Alerts
   async getAlerts(migrantId: string): Promise<Alert[]> {
-    return Array.from(this.alerts.values())
-      .filter(alert => alert.migrantId === migrantId || alert.isGlobal)
-      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+    const { data, error } = await this.supabase
+      .from('alerts')
+      .select('*')
+      .or(`migrant_id.eq.${migrantId},is_global.eq.true`)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching alerts:', error);
+      return [];
+    }
+
+    return data || [];
   }
 
   async getGlobalAlerts(region?: string): Promise<Alert[]> {
-    return Array.from(this.alerts.values())
-      .filter(alert => alert.isGlobal && (!region || alert.region === region))
-      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+    let query = this.supabase
+      .from('alerts')
+      .select('*')
+      .eq('is_global', true);
+
+    if (region) {
+      query = query.eq('region', region);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching global alerts:', error);
+      return [];
+    }
+
+    return data || [];
   }
 
   async createAlert(alertData: InsertAlert): Promise<Alert> {
-    const id = randomUUID();
-    const alert: Alert = { 
-      ...alertData, 
-      id,
-      createdAt: new Date()
-    };
-    this.alerts.set(id, alert);
-    return alert;
+    const { data, error } = await this.supabase
+      .from('alerts')
+      .insert(alertData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating alert:', error);
+      throw error;
+    }
+
+    return data;
   }
 
   async markAlertAsRead(id: string): Promise<void> {
-    const alert = this.alerts.get(id);
-    if (alert) {
-      alert.isRead = true;
-      this.alerts.set(id, alert);
+    const { error } = await this.supabase
+      .from('alerts')
+      .update({ is_read: true })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error marking alert as read:', error);
+      throw error;
     }
   }
 
+  // Symptoms
   async createSymptomCheck(symptomData: InsertSymptom): Promise<Symptom> {
-    const id = randomUUID();
-    const symptom: Symptom = { 
-      ...symptomData, 
-      id,
-      submittedAt: new Date()
-    };
-    this.symptoms.set(id, symptom);
-    return symptom;
+    const { data, error } = await this.supabase
+      .from('symptoms')
+      .insert(symptomData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating symptom check:', error);
+      throw error;
+    }
+
+    return data;
   }
 
   async getLatestSymptomCheck(migrantId: string): Promise<Symptom | undefined> {
-    const migrantSymptoms = Array.from(this.symptoms.values())
-      .filter(symptom => symptom.migrantId === migrantId)
-      .sort((a, b) => b.submittedAt!.getTime() - a.submittedAt!.getTime());
-    
-    return migrantSymptoms[0];
+    const { data, error } = await this.supabase
+      .from('symptoms')
+      .select('*')
+      .eq('migrant_id', migrantId)
+      .order('submitted_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error) {
+      console.error('Error fetching latest symptom check:', error);
+      return undefined;
+    }
+
+    return data;
   }
 
+  // Clinics
   async getClinics(location?: string): Promise<Clinic[]> {
-    const allClinics = Array.from(this.clinics.values());
-    if (!location) return allClinics;
-    
-    return allClinics.filter(clinic => 
-      clinic.address.toLowerCase().includes(location.toLowerCase())
-    );
+    let query = this.supabase.from('clinics').select('*');
+
+    if (location) {
+      query = query.ilike('address', `%${location}%`);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error fetching clinics:', error);
+      return [];
+    }
+
+    return data || [];
   }
 
   async getNearbyClinicsBylocation(latitude: string, longitude: string): Promise<Clinic[]> {
     // For demo purposes, return all clinics
     // In production, this would calculate actual distances
-    return Array.from(this.clinics.values());
+    const { data, error } = await this.supabase
+      .from('clinics')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching nearby clinics:', error);
+      return [];
+    }
+
+    return data || [];
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new SupabaseStorage();

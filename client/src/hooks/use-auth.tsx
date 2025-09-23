@@ -1,12 +1,13 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import type { User } from "@/types/health";
-import { getCurrentUser, isAuthenticated, logout as authLogout } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+import { getCurrentUser, logout as authLogout } from "@/lib/auth";
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (user: User) => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -17,26 +18,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (currentUser && isAuthenticated()) {
-      setUser(currentUser);
-    }
-    setLoading(false);
+    // Get initial session
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const userProfile = await getCurrentUser();
+        setUser(userProfile);
+      }
+      setLoading(false);
+    };
+
+    getSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const userProfile = await getCurrentUser();
+          setUser(userProfile);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("user_data", JSON.stringify(userData));
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const { login } = await import("@/lib/auth");
+      await login({ email, password });
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
-  const logout = () => {
-    setUser(null);
-    authLogout();
+  const logout = async () => {
+    setLoading(true);
+    try {
+      await authLogout();
+      setUser(null);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   const value = {
     user,
-    isAuthenticated: !!user && isAuthenticated(),
+    isAuthenticated: !!user,
     login,
     logout,
     loading,

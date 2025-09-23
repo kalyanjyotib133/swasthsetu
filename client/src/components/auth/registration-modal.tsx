@@ -55,9 +55,10 @@ type RegistrationForm = z.infer<typeof registrationSchema>;
 interface RegistrationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSwitchToLogin?: () => void;
 }
 
-export default function RegistrationModal({ open, onOpenChange }: RegistrationModalProps) {
+export default function RegistrationModal({ open, onOpenChange, onSwitchToLogin }: RegistrationModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -118,11 +119,20 @@ export default function RegistrationModal({ open, onOpenChange }: RegistrationMo
         description: "Welcome to SwasthSetu!",
       });
     } catch (error: any) {
-      toast({
-        title: "Registration failed",
-        description: error.message || "Please try again later.",
-        variant: "destructive",
-      });
+      // Handle specific error cases
+      if (error.message?.includes("User already exists")) {
+        toast({
+          title: "Account already exists",
+          description: "An account with this email already exists. Please use the login option below.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Registration failed",
+          description: error.message || "Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -495,9 +505,12 @@ export default function RegistrationModal({ open, onOpenChange }: RegistrationMo
         </Form>
 
         <div className="mt-4 text-center">
-          <button 
-            onClick={() => onOpenChange(false)}
-            className="text-sm text-primary hover:text-primary/80"
+          <button
+            onClick={() => {
+              onOpenChange(false);
+              onSwitchToLogin?.();
+            }}
+            className="text-sm text-primary hover:text-primary/80 underline"
             data-testid="button-switch-login"
           >
             Already have an account? Login
