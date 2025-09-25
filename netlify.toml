@@ -1,0 +1,26 @@
+[build]
+  command = "npm run build:netlify"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[functions.api]
+  runtime = "nodejs18.x"
+
+[functions.test]
+  runtime = "nodejs18.x"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api"
+  status = 200
+
+[[redirects]]
+  from = "/test"
+  to = "/.netlify/functions/test"
+  status = 200

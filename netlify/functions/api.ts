@@ -31,6 +31,7 @@ const authenticateToken = async (authHeader: string | undefined) => {
   }
 };
 
+
 // Migrant profile routes
 export async function handleMigrantProfile(event: any) {
   const authHeader = event.headers.authorization;
@@ -433,8 +434,8 @@ export async function handleClinics(event: any) {
   }
 }
 
-// Main handler function
-export async function handler(event: any, context: any) {
+// Main handler function - renamed to avoid conflicts
+export async function apiHandler(event: any, context: any) {
   // Enable CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -483,3 +484,6 @@ export async function handler(event: any, context: any) {
     };
   }
 }
+
+// Export the default handler for Netlify
+export { apiHandler as handler };
