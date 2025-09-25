@@ -20,11 +20,17 @@
   runtime = "nodejs18.x"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api"
-  status = 200
+   from = "/api/*"
+   to = "/.netlify/functions/api"
+   status = 200
 
 [[redirects]]
-  from = "/test"
-  to = "/.netlify/functions/test"
-  status = 200
+   from = "/test"
+   to = "/.netlify/functions/test"
+   status = 200
+
+# SPA fallback - redirect all routes to index.html for client-side routing
+[[redirects]]
+   from = "/*"
+   to = "/index.html"
+   status = 200
