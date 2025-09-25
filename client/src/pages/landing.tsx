@@ -147,24 +147,34 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden" data-testid="landing-page" style={{ touchAction: 'pan-y' }}>
+      {/* Login Section - Positioned above navigation for easy access */}
+      <div className="bg-blue-600/95 backdrop-blur-md border-b border-blue-500/20 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center h-8 sm:h-10">
+            <span className="text-xs sm:text-sm text-white font-medium">
+              👋 Welcome to Swasth Setu - Login to access your health records
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Desktop Navigation Header - Hidden on mobile */}
-      <nav className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <nav className="hidden lg:block fixed top-8 sm:top-10 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16">
             {/* Logo Section */}
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <motion.img
                   src="/swasthsetu-logo.png"
                   alt="Swasth Setu Logo"
-                  className="h-12 w-auto"
+                  className="h-10 w-auto"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 />
               </div>
               <div className="ml-3">
-                <h1 className="text-2xl font-bold text-blue-600">Swasth Setu</h1>
-                <p className="text-xs text-gray-500 -mt-1">Digital Health Partner</p>
+                <h1 className="text-xl font-bold text-blue-600">Swasth Setu</h1>
               </div>
             </div>
 
@@ -209,52 +219,52 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg safe-area-bottom">
+      {/* Mobile Header Navigation - Integrated with login above */}
+      <nav className="lg:hidden fixed top-8 sm:top-10 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-12 sm:h-14">
             {/* Mobile Logo Section */}
-            <div className="flex items-center">
+            <div className="flex items-center min-w-0 flex-1">
               <motion.img
                 src="/swasthsetu-logo.png"
                 alt="Swasth Setu Logo"
-                className="h-8 w-auto"
+                className="h-6 sm:h-7 w-auto"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               />
-              <div className="ml-2">
-                <h1 className="text-lg font-bold text-blue-600">Swasth Setu</h1>
+              <div className="ml-2 min-w-0">
+                <h1 className="text-sm sm:text-base font-bold text-blue-600 truncate">Swasth Setu</h1>
               </div>
             </div>
 
             {/* Mobile Action Buttons - Always visible */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <Button
                 variant="outline"
                 onClick={() => setShowLoginModal(true)}
-                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 text-sm px-3 py-2 touch-manipulation"
-                style={{ minHeight: '44px', minWidth: '70px' }}
+                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 py-2 touch-manipulation"
+                style={{ minHeight: '36px', minWidth: '60px' }}
               >
                 Login
               </Button>
 
               <Button
                 onClick={() => setShowRegisterModal(true)}
-                className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm touch-manipulation"
-                style={{ minHeight: '44px', minWidth: '100px' }}
+                className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-xs sm:text-sm touch-manipulation"
+                style={{ minHeight: '36px', minWidth: '80px' }}
               >
                 Get Started
-                <ChevronRight className="ml-2 h-3 w-3" />
+                <ChevronRight className="ml-1 sm:ml-2 h-3 w-3" />
               </Button>
 
               {/* Mobile Menu Button */}
               <button
                 className="p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 touch-manipulation"
-                style={{ minHeight: '44px', minWidth: '44px' }}
+                style={{ minHeight: '36px', minWidth: '36px' }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle mobile menu"
               >
-                {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
             </div>
           </div>
@@ -265,22 +275,22 @@ export default function LandingPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-white border-t border-gray-100 py-4 shadow-lg"
+              className="bg-white border-t border-gray-100 py-3 shadow-lg"
             >
-              <div className="flex flex-col space-y-2 px-4">
-                <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-3 px-2 hover:bg-gray-50 rounded-lg touch-manipulation" style={{ minHeight: '48px' }} onClick={() => setIsMenuOpen(false)}>
+              <div className="flex flex-col space-y-1 px-4">
+                <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 px-2 hover:bg-gray-50 rounded-lg touch-manipulation text-sm" style={{ minHeight: '44px' }} onClick={() => setIsMenuOpen(false)}>
                   Features
                 </a>
-                <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-3 px-2 hover:bg-gray-50 rounded-lg touch-manipulation" style={{ minHeight: '48px' }} onClick={() => setIsMenuOpen(false)}>
+                <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 px-2 hover:bg-gray-50 rounded-lg touch-manipulation text-sm" style={{ minHeight: '44px' }} onClick={() => setIsMenuOpen(false)}>
                   How It Works
                 </a>
-                <a href="#hospitals" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-3 px-2 hover:bg-gray-50 rounded-lg touch-manipulation" style={{ minHeight: '48px' }} onClick={() => setIsMenuOpen(false)}>
+                <a href="#hospitals" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 px-2 hover:bg-gray-50 rounded-lg touch-manipulation text-sm" style={{ minHeight: '44px' }} onClick={() => setIsMenuOpen(false)}>
                   Hospitals
                 </a>
-                <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-3 px-2 hover:bg-gray-50 rounded-lg touch-manipulation" style={{ minHeight: '48px' }} onClick={() => setIsMenuOpen(false)}>
+                <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 px-2 hover:bg-gray-50 rounded-lg touch-manipulation text-sm" style={{ minHeight: '44px' }} onClick={() => setIsMenuOpen(false)}>
                   About Us
                 </a>
-                <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-3 px-2 hover:bg-gray-50 rounded-lg touch-manipulation" style={{ minHeight: '48px' }} onClick={() => setIsMenuOpen(false)}>
+                <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors font-medium py-2 px-2 hover:bg-gray-50 rounded-lg touch-manipulation text-sm" style={{ minHeight: '44px' }} onClick={() => setIsMenuOpen(false)}>
                   Contact
                 </a>
               </div>
@@ -299,7 +309,7 @@ export default function LandingPage() {
         <div className="absolute top-40 right-20 w-16 h-16 bg-emerald-400/20 rounded-full animate-float-delayed"></div>
         <div className="absolute bottom-40 left-20 w-12 h-12 bg-blue-400/20 rounded-full animate-float"></div>
 
-        <div className="relative z-10 pt-20">
+        <div className="relative z-10 pt-16 sm:pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-80px)]">
               {/* Left Content */}

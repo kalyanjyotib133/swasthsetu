@@ -66,6 +66,7 @@ export default function MobileNav() {
 
   return (
     <>
+      {/* Mobile Navigation - Only show on dashboard and other authenticated pages */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border lg:hidden z-40 safe-area-bottom" data-testid="mobile-nav">
         <div className="flex justify-around py-2 px-1">
           {navItems.map((item) => (
@@ -73,20 +74,19 @@ export default function MobileNav() {
               key={item.id}
               variant="ghost"
               onClick={() => handleNavClick(item)}
-              className={`flex flex-col items-center py-2 px-1 min-w-0 relative touch-manipulation min-h-[56px] ${
+              className={`flex flex-col items-center py-2 px-1 min-w-0 relative touch-manipulation min-h-[52px] ${
                 item.active
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground"
               }`}
-              style={{ minHeight: '56px', minWidth: '64px' }}
-              style={{ touchAction: 'manipulation', minHeight: '56px', minWidth: '64px' }}
+              style={{ minHeight: '52px', minWidth: '60px', touchAction: 'manipulation' }}
               data-testid={`nav-${item.id}`}
             >
               <div className="relative">
-                <item.icon className="h-5 w-5 mb-1" />
+                <item.icon className="h-4 w-4 mb-1" />
                 {item.badge && (
                   <Badge
-                    className="absolute -top-2 -right-2 h-4 w-4 flex items-center justify-center p-0 bg-destructive text-destructive-foreground text-xs"
+                    className="absolute -top-2 -right-2 h-3 w-3 flex items-center justify-center p-0 bg-destructive text-destructive-foreground text-xs"
                     data-testid={`badge-${item.id}`}
                   >
                     {item.badge}
