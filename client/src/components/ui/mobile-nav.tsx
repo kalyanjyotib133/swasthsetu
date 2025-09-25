@@ -66,18 +66,19 @@ export default function MobileNav() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border lg:hidden z-40" data-testid="mobile-nav">
-        <div className="flex justify-around py-2">
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border lg:hidden z-40 safe-area-bottom" data-testid="mobile-nav">
+        <div className="flex justify-around py-2 px-1">
           {navItems.map((item) => (
             <Button
               key={item.id}
               variant="ghost"
               onClick={() => handleNavClick(item)}
-              className={`flex flex-col items-center py-2 px-4 min-w-0 relative ${
+              className={`flex flex-col items-center py-3 px-2 min-w-0 relative touch-manipulation min-h-[60px] ${
                 item.active
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground"
               }`}
+              style={{ touchAction: 'manipulation' }}
               data-testid={`nav-${item.id}`}
             >
               <div className="relative">

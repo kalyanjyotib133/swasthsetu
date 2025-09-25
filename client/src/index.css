@@ -94,8 +94,135 @@
     @apply border-border;
   }
 
+  html {
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    /* Ensure proper touch behavior */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Improve tap highlighting */
+    -webkit-tap-highlight-color: rgba(21, 128, 61, 0.3);
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    /* Prevent zoom on input focus on iOS */
+    font-size: 16px;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+    /* Improve touch scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Allow text selection in input fields and text areas */
+  input, textarea, select {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+
+  /* Improve button touch targets for mobile */
+  button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Fix for mobile viewport height issues */
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+
+  /* Mobile-specific improvements */
+  @media (max-width: 768px) {
+    /* Prevent horizontal scroll */
+    .overflow-x-hidden {
+      overflow-x: hidden !important;
+    }
+
+    /* Improve button touch targets */
+    button, [role="button"], .cursor-pointer {
+      min-height: 48px;
+      padding: 12px 16px;
+    }
+
+    /* Fix modal positioning on mobile */
+    .fixed.inset-0 {
+      position: fixed !important;
+      z-index: 50;
+    }
+
+    /* Ensure proper spacing on mobile */
+    .px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    /* Fix navigation on mobile */
+    nav {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+    }
+
+    /* Mobile hero section improvements */
+    .min-h-screen {
+      min-height: 100vh;
+      padding-top: 80px; /* Account for fixed nav */
+    }
+
+    /* Mobile typography improvements */
+    .text-4xl {
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .text-5xl {
+      font-size: 2.5rem;
+      line-height: 1.1;
+    }
+
+    .text-6xl {
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    /* Mobile grid improvements */
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-5 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Ensure smooth scrolling on mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix for iOS Safari */
+  @supports (-webkit-touch-callout: none) {
+    .min-h-screen {
+      min-height: -webkit-fill-available;
+    }
   }
 }
 

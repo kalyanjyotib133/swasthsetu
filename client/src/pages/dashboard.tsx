@@ -93,6 +93,7 @@ export default function Dashboard() {
     <motion.div
       className="min-h-screen bg-background"
       data-testid="dashboard-page"
+      style={{ touchAction: 'pan-y' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

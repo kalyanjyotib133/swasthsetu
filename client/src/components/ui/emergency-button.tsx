@@ -101,7 +101,8 @@ export default function EmergencyButton() {
       >
         <Button
           onClick={handleEmergencyClick}
-          className="w-16 h-16 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all animate-pulse-alert"
+          className="w-16 h-16 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all animate-pulse-alert touch-manipulation"
+          style={{ touchAction: 'manipulation', minHeight: '64px', minWidth: '64px' }}
           data-testid="button-emergency"
         >
           <AlertTriangle className="h-8 w-8" />
