@@ -49,9 +49,9 @@ export default function DashboardNavigation() {
   return (
     <nav className="bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-500/20 sticky top-0 z-40 shadow-lg" data-testid="navigation-dashboard">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Left Section - Logo and User Info */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
             <div
               className="flex-shrink-0 cursor-pointer group"
               onClick={handleGoHome}
@@ -60,49 +60,59 @@ export default function DashboardNavigation() {
               <img
                 src="/swasthsetu-logo.png"
                 alt="SwasthSetu Logo"
-                className="h-16 w-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
+                className="h-10 sm:h-12 lg:h-16 w-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
               />
             </div>
 
-            <div className="flex flex-col text-white">
-              <span className="text-2xl font-bold tracking-tight" data-testid="text-greeting">
-                Good Morning!
+            {/* Mobile: Show only essential info */}
+            <div className="flex flex-col text-white min-w-0 flex-1 lg:flex-initial">
+              <span className="text-sm sm:text-lg lg:text-2xl font-bold tracking-tight truncate" data-testid="text-greeting">
+                <span className="block sm:hidden">Hi!</span>
+                <span className="hidden sm:block">Good Morning!</span>
               </span>
-              <div className="flex items-center space-x-2 text-blue-100">
+              <div className="hidden lg:flex items-center space-x-2 text-blue-100">
                 <span className="font-medium">📍 Mumbai → Delhi</span>
                 <span className="text-blue-200">•</span>
                 <span className="font-medium">Migrant ID: MH2024001</span>
                 <span className="text-blue-200">•</span>
                 <span className="font-medium">Profile: 87% Complete</span>
               </div>
+              {/* Mobile: Show condensed info */}
+              <div className="flex lg:hidden items-center space-x-1 text-xs sm:text-sm text-blue-100">
+                <span className="font-medium truncate">📍 Delhi</span>
+                <span className="text-blue-200 hidden sm:inline">•</span>
+                <span className="font-medium truncate sm:inline">87% Complete</span>
+              </div>
             </div>
           </div>
 
           {/* Right Section - Actions */}
-          <div className="flex items-center space-x-3">
-            {/* QR Code Button */}
+          <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3">
+            {/* QR Code Button - Essential */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setShowQRModal(true)}
               title="QR Health Card"
               data-testid="button-qr"
-              className="hover:bg-white/20 transition-all duration-300 hover:scale-110 text-white"
+              className="hover:bg-white/20 transition-all duration-300 hover:scale-110 text-white touch-manipulation"
+              style={{ minHeight: '44px', minWidth: '44px' }}
             >
-              <QrCode className="h-5 w-5" />
+              <QrCode className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
 
-            {/* Notifications Dropdown */}
+            {/* Notifications - Essential */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="relative hover:bg-white/20 transition-all duration-300 hover:scale-110 text-white"
+                  className="relative hover:bg-white/20 transition-all duration-300 hover:scale-110 text-white touch-manipulation"
                   data-testid="button-notifications"
+                  style={{ minHeight: '44px', minWidth: '44px' }}
                 >
-                  <Bell className="h-5 w-5" />
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-orange-500 text-white text-xs animate-pulse font-bold">
+                  <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Badge className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center p-0 bg-orange-500 text-white text-xs animate-pulse font-bold">
                     {mockNotifications.length}
                   </Badge>
                 </Button>
@@ -135,66 +145,31 @@ export default function DashboardNavigation() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Language Selector */}
+            {/* Profile Dropdown - Essential (simplified for mobile) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center space-x-2 hover:bg-white/20 transition-all duration-300 hover:scale-105 text-white"
-                  data-testid="button-language"
-                >
-                  <Globe className="h-4 w-4" />
-                  <span className="text-sm font-medium">हिंदी</span>
-                  <ChevronDown className="h-3 w-3 transition-transform duration-300 group-data-[state=open]:rotate-180" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" data-testid="menu-language">
-                <DropdownMenuItem data-testid="lang-hindi">
-                  <Globe className="mr-2 h-4 w-4" />
-                  हिंदी (Hindi)
-                </DropdownMenuItem>
-                <DropdownMenuItem data-testid="lang-english">
-                  <Globe className="mr-2 h-4 w-4" />
-                  English
-                </DropdownMenuItem>
-                <DropdownMenuItem data-testid="lang-marathi">
-                  <Globe className="mr-2 h-4 w-4" />
-                  मराठी (Marathi)
-                </DropdownMenuItem>
-                <DropdownMenuItem data-testid="lang-bengali">
-                  <Globe className="mr-2 h-4 w-4" />
-                  বাংলা (Bengali)
-                </DropdownMenuItem>
-                <DropdownMenuItem data-testid="lang-tamil">
-                  <Globe className="mr-2 h-4 w-4" />
-                  தமிழ் (Tamil)
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Profile Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-3 hover:bg-white/20 transition-all duration-300 hover:scale-105 text-white p-2"
+                  className="flex items-center space-x-2 sm:space-x-3 hover:bg-white/20 transition-all duration-300 hover:scale-105 text-white p-1 sm:p-2 touch-manipulation"
                   data-testid="button-profile"
+                  style={{ minHeight: '44px' }}
                 >
                   <div className="relative">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
-                      <span className="text-white font-bold text-lg">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
+                      <span className="text-white font-bold text-sm sm:text-lg">
                         {user?.username?.[0]?.toUpperCase() || "U"}
                       </span>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-full" />
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full" />
                     </div>
                   </div>
-                  <div className="flex flex-col items-start">
-                    <span className="font-semibold">{user?.username || "User"}</span>
+                  {/* Hide text on small screens */}
+                  <div className="hidden sm:flex flex-col items-start">
+                    <span className="font-semibold text-sm">{user?.username || "User"}</span>
                     <span className="text-xs text-blue-100">Rahul Kumar</span>
                   </div>
-                  <ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+                  <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" data-testid="menu-profile">

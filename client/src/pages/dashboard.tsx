@@ -102,10 +102,11 @@ export default function Dashboard() {
       <DashboardNavigation />
 
       <motion.div
-        className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pb-20 sm:pb-24 lg:pb-8"
+        className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pb-20 sm:pb-24 lg:pb-8 pt-20 sm:pt-6 lg:pt-8"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
+        style={{ paddingTop: 'calc(64px + 1rem)' }} /* Mobile: Account for 64px nav + 16px padding */
       >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
