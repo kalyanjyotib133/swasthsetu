@@ -4,29 +4,20 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
 import DashboardNavigation from "@/components/dashboard/navigation";
 import HeroCards from "@/components/dashboard/hero-cards";
-import SymptomCheck from "@/components/dashboard/symptom-check";
+import SymptomCheck from "@/components/dashboard/symptom-checker";
 import VaccinationTracker from "@/components/dashboard/vaccination-tracker";
 import HealthRecords from "@/components/dashboard/health-records";
 import AlertsFeed from "@/components/dashboard/alerts-feed";
 import NearbyClinics from "@/components/dashboard/nearby-clinics";
 import HealthTips from "@/components/dashboard/health-tips";
 import QuickActions from "@/components/dashboard/quick-actions";
+import HealthAnalytics from "@/components/dashboard/health-analytics";
+import PersonalizedInsights from "@/components/dashboard/personalized-insights";
 import MobileNav from "@/components/ui/mobile-nav";
 import EmergencyButton from "@/components/ui/emergency-button";
 
 export default function Dashboard() {
-  const { isAuthenticated, user } = useAuth();
-  const [, setLocation] = useLocation();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setLocation("/");
-    }
-  }, [isAuthenticated, setLocation]);
-
-  if (!isAuthenticated || !user) {
-    return null;
-  }
+  const { user } = useAuth();
 
   return (
     <motion.div
@@ -40,7 +31,7 @@ export default function Dashboard() {
       <DashboardNavigation />
 
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 lg:pb-8"
+        className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pb-20 sm:pb-24 lg:pb-8"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
@@ -100,22 +91,33 @@ export default function Dashboard() {
         >
           <HealthTips />
         </motion.div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 1.0, type: "spring" }}
-      >
-        <QuickActions />
-      </motion.div>
+        {/* Quick Actions Grid - Now part of main content */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+        >
+          <QuickActions />
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 1.1, type: "spring" }}
-      >
-        <EmergencyButton />
+        {/* Health Analytics Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+        >
+          <HealthAnalytics />
+        </motion.div>
+
+        {/* Personalized Insights Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        >
+          <PersonalizedInsights />
+        </motion.div>
       </motion.div>
 
       <MobileNav />

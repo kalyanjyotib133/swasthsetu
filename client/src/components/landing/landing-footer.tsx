@@ -11,9 +11,9 @@ export default function LandingFooter() {
               <span className="text-lg font-semibold text-primary" data-testid="brand-footer">SwasthSetu</span>
             </div>
             <p className="text-muted-foreground text-sm" data-testid="text-footer-powered">
-              Powered by Government of Kerala<br/>
-              Supporting UN SDG-3
-            </p>
+               Your Health, Connected<br/>
+               Digital healthcare platform
+             </p>
           </div>
           
           <div>
@@ -45,8 +45,8 @@ export default function LandingFooter() {
         </div>
         
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground" data-testid="text-copyright">
-          © 2024 Government of Kerala. All rights reserved. | Built for migrant worker welfare.
-        </div>
+           © 2024 SwasthSetu. All rights reserved. | Developed by Kalyanjyoti Barman.
+         </div>
       </div>
     </footer>
   );

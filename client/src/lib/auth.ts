@@ -100,30 +100,58 @@ export async function getAuthToken(): Promise<string | null> {
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Authentication timeout')), 5000)
+    );
 
-  if (!user) return null;
+    const getUserPromise = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      return user;
+    };
 
-  // Get user profile from our users table
-  const { data: userProfile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+    const user = await Promise.race([getUserPromise(), timeoutPromise]) as any;
 
-  if (userProfile) {
-    return userProfile;
+    if (!user) return null;
+
+    // Try to get user profile from our users table with timeout
+    const getProfilePromise = async () => {
+      const { data: userProfile, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      return { userProfile, error };
+    };
+
+    try {
+      const { userProfile, error } = await Promise.race([
+        getProfilePromise(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Database timeout')), 2000))
+      ]) as { userProfile: any, error: any };
+
+      if (userProfile && !error) {
+        return userProfile;
+      }
+    } catch (profileError) {
+      console.warn('User profile not found, using auth data:', profileError);
+    }
+
+    // Always return user data from auth, even if database query fails
+    return {
+      id: user.id,
+      email: user.email || '',
+      username: user.user_metadata?.username || user.email?.split('@')[0] || '',
+      role: user.user_metadata?.role || 'migrant',
+      isVerified: user.email_confirmed_at ? true : false,
+      createdAt: new Date(user.created_at),
+    };
+  } catch (error) {
+    console.error('Error in getCurrentUser:', error);
+    // If auth fails completely, return null to allow app to load
+    return null;
   }
-
-  // If no profile exists, create one with Supabase auth user data
-  return {
-    id: user.id,
-    email: user.email || '',
-    username: user.user_metadata?.username || user.email?.split('@')[0] || '',
-    role: user.user_metadata?.role || 'migrant',
-    isVerified: user.email_confirmed_at ? true : false,
-    createdAt: new Date(user.created_at),
-  };
 }
 
 export async function setCurrentUser(user: User): Promise<void> {
@@ -171,11 +199,11 @@ export async function updateProfile(updates: Partial<User>): Promise<void> {
 }
 
 // Google OAuth authentication
-export async function signInWithGoogle(): Promise<AuthResponse> {
-  const { data, error } = await supabase.auth.signInWithOAuth({
+export async function signInWithGoogle(): Promise<void> {
+  const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/dashboard`,
+      redirectTo: `${window.location.origin}/dashboard#oauth_callback`,
     },
   });
 
@@ -183,27 +211,6 @@ export async function signInWithGoogle(): Promise<AuthResponse> {
     throw new Error(error.message);
   }
 
-  // Return a promise that resolves when the user comes back from Google
-  return new Promise((resolve, reject) => {
-    const checkSession = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (sessionData.session?.user) {
-        const user = sessionData.session.user;
-        resolve({
-          user: {
-            id: user.id,
-            email: user.email || '',
-            username: user.user_metadata?.username || user.email?.split('@')[0] || '',
-            role: user.user_metadata?.role || 'migrant',
-            isVerified: user.email_confirmed_at ? true : false,
-            createdAt: new Date(user.created_at),
-          },
-          token: sessionData.session.access_token || '',
-        });
-      } else {
-        setTimeout(checkSession, 1000); // Check again in 1 second
-      }
-    };
-    checkSession();
-  });
+  // OAuth flow will redirect to Google and back to dashboard
+  // The auth state listener in useAuth hook will handle the authentication
 }

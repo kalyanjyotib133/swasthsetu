@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/use-auth";
+import AuthRedirect from "@/components/AuthRedirect";
 import LandingPage from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
@@ -24,7 +25,9 @@ function App() {
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <AuthRedirect>
+            <Router />
+          </AuthRedirect>
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>

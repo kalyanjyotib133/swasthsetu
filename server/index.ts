@@ -1,7 +1,12 @@
-import dotenv from "dotenv";
+import { config } from "dotenv";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables at the very beginning
-dotenv.config({ path: '.env' });
+config({ path: join(__dirname, '..', '.env') });
 
 // Debug: Log environment variables
 console.log('Environment variables loaded:');

@@ -83,16 +83,15 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     try {
-      const response = await signInWithGoogle();
-      loginWithUser(response.user);
+      await signInWithGoogle();
+      // OAuth flow will redirect to Google and back to dashboard
+      // The auth state listener will handle the authentication automatically
       onOpenChange(false);
 
       toast({
-        title: "Login successful",
-        description: "Welcome to SwasthSetu!",
+        title: "Redirecting to Google...",
+        description: "You'll be redirected back after authentication.",
       });
-
-      setLocation("/dashboard");
     } catch (error: any) {
       toast({
         title: "Google login failed",

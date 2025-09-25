@@ -19,14 +19,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     // Get initial session
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const userProfile = await getCurrentUser();
-        setUser(userProfile);
+      const timeout = setTimeout(() => {
+        if (isMounted) {
+          console.warn('Auth timeout reached, proceeding without authentication');
+          setLoading(false);
+        }
+      }, 5000); // Reduced to 5 seconds
+
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error getting session:', error);
+          if (isMounted) {
+            clearTimeout(timeout);
+            setLoading(false);
+          }
+          return;
+        }
+
+        if (session?.user && isMounted) {
+          try {
+            const userProfile = await getCurrentUser();
+            if (isMounted) {
+              setUser(userProfile);
+            }
+          } catch (error) {
+            console.error('Error getting current user:', error);
+            if (isMounted) {
+              setUser(null);
+            }
+          }
+        }
+
+        if (isMounted) {
+          clearTimeout(timeout);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error in getSession:', error);
+        if (isMounted) {
+          clearTimeout(timeout);
+          setLoading(false);
+        }
       }
-      setLoading(false);
     };
 
     getSession();
@@ -34,17 +73,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          const userProfile = await getCurrentUser();
-          setUser(userProfile);
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
+        console.log('Auth state change:', event, session?.user?.email);
+        try {
+          if (event === 'SIGNED_IN' && session?.user && isMounted) {
+            const userProfile = await getCurrentUser();
+            if (isMounted) {
+              setUser(userProfile);
+            }
+          } else if (event === 'SIGNED_OUT') {
+            if (isMounted) {
+              setUser(null);
+            }
+          }
+
+          if (isMounted) {
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error('Error in auth state change:', error);
+          if (isMounted) {
+            setLoading(false);
+          }
         }
-        setLoading(false);
       }
     );
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -54,6 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { login } = await import("@/lib/auth");
       await login({ email, password });
+      // Don't set loading to false here - let the auth state change listener handle it
     } catch (error) {
       setLoading(false);
       throw error;
@@ -69,6 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await authLogout();
       setUser(null);
+      // Don't set loading to false here - let the auth state change listener handle it
     } catch (error) {
       setLoading(false);
       throw error;

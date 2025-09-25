@@ -10,19 +10,19 @@
   --card-foreground: hsl(240 10% 3.9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(240 10% 3.9%);
-  --primary: hsl(142 76% 36%);
-  --primary-foreground: hsl(355 20% 98%);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(240 4.8% 95.9%);
   --secondary-foreground: hsl(240 5.9% 10%);
   --muted: hsl(240 4.8% 95.9%);
   --muted-foreground: hsl(240 3.8% 46.1%);
-  --accent: hsl(205 100% 60%);
+  --accent: hsl(24 95% 53%);
   --accent-foreground: hsl(0 0% 100%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(210 20% 98%);
   --border: hsl(240 5.9% 90%);
   --input: hsl(240 5.9% 90%);
-  --ring: hsl(142 76% 36%);
+  --ring: hsl(217 91% 60%);
   --chart-1: hsl(142 76% 36%);
   --chart-2: hsl(159 100% 36%);
   --chart-3: hsl(42 93% 56%);
@@ -41,10 +41,20 @@
   --font-mono: Menlo, monospace;
   --radius: 0.75rem;
   
-  /* Kerala theme colors */
+  /* Healthcare theme colors */
+  --healthcare-blue: hsl(217 91% 60%);
+  --healthcare-blue-light: hsl(217 91% 70%);
+  --healthcare-blue-dark: hsl(217 91% 45%);
+  --success-green: hsl(142 76% 36%);
+  --warning-orange: hsl(24 95% 53%);
+  --danger-red: hsl(0 84% 60%);
+  --info-blue: hsl(205 100% 60%);
+  --neutral-gray: hsl(240 3.8% 46.1%);
+
+  /* Legacy Kerala colors for backward compatibility */
   --kerala-green: hsl(142 76% 36%);
   --kerala-gold: hsl(42 93% 56%);
-  --kerala-blue: hsl(205 100% 60%);
+  --kerala-blue: hsl(217 91% 60%);
   --kerala-red: hsl(0 84% 60%);
   --kerala-yellow: hsl(42 93% 76%);
 }
@@ -56,19 +66,19 @@
   --card-foreground: hsl(0 0% 98%);
   --popover: hsl(240 10% 3.9%);
   --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(142 76% 36%);
-  --primary-foreground: hsl(355 20% 98%);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(240 3.7% 15.9%);
   --secondary-foreground: hsl(0 0% 98%);
   --muted: hsl(240 3.7% 15.9%);
   --muted-foreground: hsl(240 5% 64.9%);
-  --accent: hsl(205 100% 60%);
+  --accent: hsl(24 95% 53%);
   --accent-foreground: hsl(0 0% 100%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(210 20% 98%);
   --border: hsl(240 3.7% 15.9%);
   --input: hsl(240 3.7% 15.9%);
-  --ring: hsl(142 76% 36%);
+  --ring: hsl(217 91% 60%);
   --sidebar: hsl(240 10% 3.9%);
   --sidebar-foreground: hsl(0 0% 98%);
   --sidebar-primary: hsl(142 76% 36%);
@@ -108,6 +118,36 @@
 
   .pulse-alert {
     animation: pulse 2s infinite;
+  }
+
+  .healthcare-gradient {
+    background: linear-gradient(135deg, var(--healthcare-blue), var(--healthcare-blue-light));
+  }
+
+  .healthcare-card {
+    @apply bg-card backdrop-blur-sm border border-border rounded-xl shadow-sm hover:shadow-lg transition-all duration-300;
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .healthcare-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary transition-all duration-300 hover:shadow-lg;
+  }
+
+  .healthcare-button-success {
+    @apply bg-green-500 text-white hover:bg-green-600 transition-all duration-300 hover:shadow-lg;
+  }
+
+  .healthcare-button-warning {
+    @apply bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300 hover:shadow-lg;
+  }
+
+  .healthcare-button-danger {
+    @apply bg-red-500 text-white hover:bg-red-600 transition-all duration-300 hover:shadow-lg;
+  }
+
+  .health-score-ring {
+    transform: rotate(-90deg);
+    transform-origin: center;
   }
 
   .kerala-gradient {
