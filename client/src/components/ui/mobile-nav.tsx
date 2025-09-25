@@ -73,7 +73,7 @@ export default function MobileNav() {
               key={item.id}
               variant="ghost"
               onClick={() => handleNavClick(item)}
-              className={`flex flex-col items-center py-3 px-2 min-w-0 relative touch-manipulation min-h-[60px] ${
+              className={`flex flex-col items-center py-2 px-1 min-w-0 relative touch-manipulation min-h-[56px] ${
                 item.active
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground"

@@ -230,7 +230,7 @@
     /* Fix navigation bar height on mobile */
     nav {
       height: auto !important;
-      min-height: 64px;
+      min-height: 56px !important;
     }
 
     /* Ensure navigation stays at top */
@@ -240,6 +240,27 @@
       left: 0 !important;
       right: 0 !important;
       z-index: 50 !important;
+    }
+
+    /* Force display of navigation elements */
+    nav, nav *, nav .flex, nav .items-center, nav .justify-between {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Ensure navigation buttons are visible */
+    nav button, nav [role="button"] {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Fix navigation text */
+    nav h1, nav h2, nav h3, nav h4, nav h5, nav h6, nav span, nav p {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
     /* Fix for dashboard navigation */
@@ -306,6 +327,7 @@
     /* Ensure minimal navigation height */
     nav {
       min-height: 56px !important;
+      height: 56px !important;
     }
 
     /* Hide non-essential text on very small screens */
@@ -320,11 +342,62 @@
 
     /* Fix for mobile touch targets */
     nav button, nav [role="button"] {
-      min-height: 44px !important;
-      min-width: 44px !important;
+      min-height: 40px !important;
+      min-width: 40px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
+    }
+
+    /* Ensure navigation content is properly sized */
+    nav img {
+      height: 28px !important;
+      width: auto !important;
+    }
+
+    nav h1 {
+      font-size: 16px !important;
+      line-height: 1.2 !important;
+    }
+
+    /* Fix spacing in very small screens */
+    nav .px-3 {
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+    }
+
+    nav .space-x-1 > * + * {
+      margin-left: 4px !important;
+    }
+
+    nav .space-x-2 > * + * {
+      margin-left: 8px !important;
+    }
+  }
+
+  /* Ultra-small screens (iPhone SE, etc.) */
+  @media (max-width: 375px) {
+    nav {
+      min-height: 48px !important;
+      height: 48px !important;
+    }
+
+    nav .px-3 {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+
+    nav img {
+      height: 24px !important;
+    }
+
+    nav h1 {
+      font-size: 14px !important;
+    }
+
+    nav button {
+      min-height: 36px !important;
+      min-width: 36px !important;
     }
   }
 }
