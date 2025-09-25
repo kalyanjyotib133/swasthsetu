@@ -1,6 +1,19 @@
 import { supabase } from "./supabase";
 import type { User, AuthResponse } from "@/types/health";
 
+// Utility function to detect production environment
+export function isProduction(): boolean {
+  return window.location.origin.includes('netlify.app') ||
+         window.location.hostname !== 'localhost';
+}
+
+// Get the correct redirect URL for the current environment
+export function getRedirectUrl(): string {
+  const isProd = isProduction();
+  const baseUrl = isProd ? window.location.origin : 'http://localhost:5173';
+  return `${baseUrl}/dashboard#oauth_callback`;
+}
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -200,17 +213,28 @@ export async function updateProfile(updates: Partial<User>): Promise<void> {
 
 // Google OAuth authentication
 export async function signInWithGoogle(): Promise<void> {
+  const redirectTo = getRedirectUrl();
+
+  console.log('Google OAuth redirect URL:', redirectTo);
+  console.log('Environment:', isProduction() ? 'Production' : 'Development');
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/dashboard#oauth_callback`,
+      redirectTo,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
     },
   });
 
   if (error) {
+    console.error('Google OAuth error:', error);
     throw new Error(error.message);
   }
 
+  console.log('Google OAuth initiated successfully');
   // OAuth flow will redirect to Google and back to dashboard
   // The auth state listener in useAuth hook will handle the authentication
 }

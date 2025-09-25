@@ -37,6 +37,7 @@ import {
 export default function LandingPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showDemoModal, setShowDemoModal] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [language, setLanguage] = useState("EN");
   const [, setLocation] = useLocation();
@@ -155,14 +156,14 @@ export default function LandingPage() {
               <div className="flex-shrink-0">
                 <motion.img
                   src="/swasthsetu-logo.png"
-                  alt="Migrant Swasth Setu Logo"
+                  alt="Swasth Setu Logo"
                   className="h-12 w-auto"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 />
               </div>
               <div className="ml-3">
-                <h1 className="text-2xl font-bold text-blue-600">Migrant Swasth Setu</h1>
+                <h1 className="text-2xl font-bold text-blue-600">Swasth Setu</h1>
                 <p className="text-xs text-gray-500 -mt-1">Digital Health Partner</p>
               </div>
             </div>
@@ -348,7 +349,7 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    onClick={() => setShowLoginModal(true)}
+                    onClick={() => setShowDemoModal(true)}
                     className="border-2 border-white/80 text-white hover:bg-white hover:text-blue-600 font-bold px-8 py-4 rounded-lg transition-all duration-300 text-lg group"
                   >
                     <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -573,7 +574,7 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              How Migrant Swasth Setu Works
+              How Swasth Setu Works
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Get started in just 3 simple steps
@@ -969,7 +970,7 @@ export default function LandingPage() {
                     <span className="text-white font-bold text-lg">KL</span>
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold">Migrant Swasth Setu</h3>
+                    <h3 className="text-2xl font-bold">Swasth Setu</h3>
                     <p className="text-gray-400 text-sm">Digital Health Partner</p>
                   </div>
                 </div>
@@ -1044,7 +1045,7 @@ export default function LandingPage() {
             <div className="border-t border-gray-800 mt-12 pt-8">
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="text-sm text-gray-400 mb-4 md:mb-0">
-                  © 2024 Government of Kerala. All rights reserved. | Built with ❤️ for migrant worker welfare.
+                  © 2024 All rights reserved SwasthSetu.
                 </div>
                 <div className="flex items-center space-x-6">
                   <div className="flex items-center space-x-2 text-sm text-gray-400">
@@ -1060,6 +1061,40 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Demo Video Modal */}
+      {showDemoModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-xl font-bold text-gray-900">Swasth Setu Demo</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDemoModal(false)}
+                className="hover:bg-gray-100"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="aspect-video bg-gray-900 relative">
+              <iframe
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Swasth Setu Demo Video"
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600 text-center">
+                Watch this demo to see how Swasth Setu helps you manage your health records efficiently.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       <LoginModal

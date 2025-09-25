@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.warn('Auth timeout reached, proceeding without authentication');
           setLoading(false);
         }
-      }, 5000); // Reduced to 5 seconds
+      }, 8000); // Increased to 8 seconds for OAuth flows
 
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -41,11 +41,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
+        // Check for OAuth callback parameters
+        const hash = window.location.hash;
+        const hasAccessToken = hash.includes("access_token");
+        const hasOAuthCallback = hash.includes("oauth_callback");
+
+        if (hasAccessToken || hasOAuthCallback) {
+          console.log('OAuth callback detected, cleaning up URL and setting up session');
+          // Clean up the URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
         if (session?.user && isMounted) {
           try {
+            console.log('Session found, fetching user profile...');
             const userProfile = await getCurrentUser();
             if (isMounted) {
               setUser(userProfile);
+              console.log('User profile loaded successfully');
             }
           } catch (error) {
             console.error('Error getting current user:', error);
@@ -74,13 +87,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state change:', event, session?.user?.email);
+
+        // Check for OAuth callback parameters
+        const hash = window.location.hash;
+        const hasAccessToken = hash.includes("access_token");
+        const hasOAuthCallback = hash.includes("oauth_callback");
+
         try {
           if (event === 'SIGNED_IN' && session?.user && isMounted) {
+            console.log('User signed in, fetching profile...');
             const userProfile = await getCurrentUser();
             if (isMounted) {
               setUser(userProfile);
+              console.log('User profile set successfully');
+            }
+
+            // Clean up URL after successful OAuth
+            if (hasAccessToken || hasOAuthCallback) {
+              window.history.replaceState({}, document.title, window.location.pathname);
             }
           } else if (event === 'SIGNED_OUT') {
+            console.log('User signed out');
             if (isMounted) {
               setUser(null);
             }

@@ -13,6 +13,10 @@ export default function AuthRedirect({ children }: AuthRedirectProps) {
   useEffect(() => {
     // Only redirect after loading is complete
     if (!loading) {
+      const hash = window.location.hash;
+      const hasAccessToken = hash.includes("access_token");
+      const hasOAuthCallback = hash.includes("oauth_callback");
+
       // If user is authenticated and on landing page, redirect to dashboard
       if (user && window.location.pathname === "/") {
         setLocation("/dashboard");
@@ -29,11 +33,16 @@ export default function AuthRedirect({ children }: AuthRedirectProps) {
       else if (user && window.location.pathname === "/not-found") {
         setLocation("/dashboard");
       }
+      // Handle OAuth callback - redirect to dashboard if we have auth tokens
+      else if (hasAccessToken || hasOAuthCallback) {
+        // Clean up the URL by removing hash parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+        setLocation("/dashboard");
+      }
       // Only redirect from dashboard to landing if user explicitly navigates there without auth
       // Don't redirect during OAuth callback process
       else if (!user && window.location.pathname === "/dashboard" &&
-               !window.location.hash.includes("access_token") &&
-               !window.location.hash.includes("oauth_callback")) {
+               !hasAccessToken && !hasOAuthCallback) {
         setLocation("/");
       }
     }
@@ -45,8 +54,18 @@ export default function AuthRedirect({ children }: AuthRedirectProps) {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
-          <p className="text-sm text-gray-500 mt-2">Please wait while we prepare your health records</p>
+          <p className="text-gray-600">
+            {window.location.hash.includes("access_token") || window.location.hash.includes("oauth_callback")
+              ? "Completing Google login..."
+              : "Loading your dashboard..."
+            }
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            {window.location.hash.includes("access_token") || window.location.hash.includes("oauth_callback")
+              ? "Please wait while we verify your credentials"
+              : "Please wait while we prepare your health records"
+            }
+          </p>
         </div>
       </div>
     );
