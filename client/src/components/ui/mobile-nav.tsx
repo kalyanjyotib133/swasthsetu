@@ -78,13 +78,14 @@ export default function MobileNav() {
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground"
               }`}
-              style={{ touchAction: 'manipulation' }}
+              style={{ minHeight: '56px', minWidth: '64px' }}
+              style={{ touchAction: 'manipulation', minHeight: '56px', minWidth: '64px' }}
               data-testid={`nav-${item.id}`}
             >
               <div className="relative">
                 <item.icon className="h-5 w-5 mb-1" />
                 {item.badge && (
-                  <Badge 
+                  <Badge
                     className="absolute -top-2 -right-2 h-4 w-4 flex items-center justify-center p-0 bg-destructive text-destructive-foreground text-xs"
                     data-testid={`badge-${item.id}`}
                   >

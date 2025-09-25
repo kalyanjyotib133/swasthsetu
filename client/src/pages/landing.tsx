@@ -146,24 +146,24 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden" data-testid="landing-page" style={{ touchAction: 'pan-y', paddingTop: '64px' }} /* Add padding for fixed nav */>
+    <div className="min-h-screen bg-white overflow-x-hidden" data-testid="landing-page" style={{ touchAction: 'pan-y' }}>
       {/* Premium Navigation Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm safe-area-top">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16 lg:h-20">
             {/* Logo Section */}
-            <div className="flex items-center min-w-0 flex-1">
+            <div className="flex items-center min-w-0 flex-1 max-w-[60%] sm:max-w-none">
               <div className="flex-shrink-0">
                 <motion.img
                   src="/swasthsetu-logo.png"
                   alt="Swasth Setu Logo"
-                  className="h-7 sm:h-8 lg:h-12 w-auto"
+                  className="h-8 sm:h-9 lg:h-12 w-auto"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 />
               </div>
-              <div className="ml-2 sm:ml-3 min-w-0">
-                <h1 className="text-base sm:text-lg lg:text-2xl font-bold text-blue-600 truncate">Swasth Setu</h1>
+              <div className="ml-2 sm:ml-3 min-w-0 flex-1 sm:flex-initial">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">Swasth Setu</h1>
                 <p className="text-xs text-gray-500 -mt-1 hidden sm:block">Digital Health Partner</p>
               </div>
             </div>
@@ -189,32 +189,34 @@ export default function LandingPage() {
 
             {/* Action Buttons */}
             <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
-              {/* Login Button - Smaller on mobile */}
+              {/* Login Button - Always visible with proper text */}
               <Button
                 variant="outline"
                 onClick={() => setShowLoginModal(true)}
                 className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 touch-manipulation"
-                style={{ minHeight: '40px', minWidth: '60px' }}
+                style={{ minHeight: '44px', minWidth: '70px' }}
               >
-                <span className="hidden sm:inline">Login</span>
-                <span className="sm:hidden">Log in</span>
+                <span className="sm:hidden">Login</span>
+                <span className="hidden sm:inline lg:hidden">Login</span>
+                <span className="hidden lg:inline">Login</span>
               </Button>
 
               {/* Get Started Button - Smaller on mobile */}
               <Button
                 onClick={() => setShowRegisterModal(true)}
-                className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-semibold px-2 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-xs sm:text-sm lg:text-base touch-manipulation"
-                style={{ minHeight: '40px', minWidth: '80px' }}
+                className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-semibold px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-xs sm:text-sm lg:text-base touch-manipulation"
+                style={{ minHeight: '44px', minWidth: '90px' }}
               >
-                <span className="hidden sm:inline">Get Started Free</span>
                 <span className="sm:hidden">Get Started</span>
+                <span className="hidden sm:inline lg:hidden">Get Started</span>
+                <span className="hidden lg:inline">Get Started Free</span>
                 <ChevronRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
 
               {/* Mobile Menu Button - Always visible on mobile */}
               <button
                 className="lg:hidden p-1.5 sm:p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 touch-manipulation"
-                style={{ minHeight: '40px', minWidth: '40px' }}
+                style={{ minHeight: '44px', minWidth: '44px' }}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle mobile menu"
               >

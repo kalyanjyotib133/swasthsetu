@@ -254,6 +254,8 @@
       display: flex !important;
       visibility: visible !important;
       opacity: 1 !important;
+      min-height: 44px !important;
+      min-width: 44px !important;
     }
 
     /* Fix navigation text */
@@ -289,6 +291,14 @@
     nav img {
       display: block !important;
       visibility: visible !important;
+      height: 32px !important;
+      width: auto !important;
+    }
+
+    /* Fix navigation text sizes */
+    nav h1 {
+      font-size: 18px !important;
+      line-height: 1.2 !important;
     }
 
     /* Fix navigation buttons */
