@@ -34,15 +34,16 @@ export default function AuthRedirect({ children }: AuthRedirectProps) {
         setLocation("/dashboard");
       }
       // Handle OAuth callback - redirect to dashboard if we have auth tokens
-      else if (hasAccessToken || hasOAuthCallback) {
+      else if ((hasAccessToken || hasOAuthCallback) && !loading) {
+        console.log('OAuth callback detected, redirecting to dashboard');
         // Clean up the URL by removing hash parameters
         window.history.replaceState({}, document.title, window.location.pathname);
         setLocation("/dashboard");
       }
       // Only redirect from dashboard to landing if user explicitly navigates there without auth
-      // Don't redirect during OAuth callback process
+      // Don't redirect during OAuth callback process or if still loading
       else if (!user && window.location.pathname === "/dashboard" &&
-               !hasAccessToken && !hasOAuthCallback) {
+               !hasAccessToken && !hasOAuthCallback && !loading) {
         setLocation("/");
       }
     }

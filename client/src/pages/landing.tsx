@@ -350,7 +350,7 @@ export default function LandingPage() {
                     size="lg"
                     variant="outline"
                     onClick={() => setShowDemoModal(true)}
-                    className="border-2 border-white/80 text-white hover:bg-white hover:text-blue-600 font-bold px-8 py-4 rounded-lg transition-all duration-300 text-lg group"
+                    className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-blue-600 font-bold px-8 py-4 rounded-lg transition-all duration-300 text-lg group shadow-lg"
                   >
                     <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                     Watch Demo

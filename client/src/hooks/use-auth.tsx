@@ -99,11 +99,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const userProfile = await getCurrentUser();
             if (isMounted) {
               setUser(userProfile);
-              console.log('User profile set successfully');
+              console.log('User profile set successfully:', userProfile?.id);
+              console.log('User authentication completed, should redirect to dashboard');
             }
 
             // Clean up URL after successful OAuth
             if (hasAccessToken || hasOAuthCallback) {
+              console.log('Cleaning up OAuth callback URL');
               window.history.replaceState({}, document.title, window.location.pathname);
             }
           } else if (event === 'SIGNED_OUT') {
